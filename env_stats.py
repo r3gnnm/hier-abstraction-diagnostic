@@ -1,7 +1,4 @@
-"""Environment statistic quoted in Sec. 3.1: how often room identity (the slow
-variable) changes under the data-collection policy used for training
-(inertial random walk, same as train_hier.collect).
-
+"""
 Writes results/env_stats.json.
 Usage:  python env_stats.py --episodes 500 --ep-len 75
 """
