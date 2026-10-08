@@ -57,7 +57,7 @@ def main():
         put(f"T{tag}N", len(c["rows"]), "d")
         bold = key == "ego_recurrent"
         b = (lambda s: r"\mathbf{" + s + "}") if bold else (lambda s: s)
-        body.append(f"{obs} & {ab} & ${b(num[f'T{tag}Zone'])}$ & "
+        body.append(f"{obs} & {ab} & ${num[f'T{tag}Zone']}$ & "
                     f"${b(num[f'T{tag}Trained'] + r'\pm' + num[f'T{tag}TrainedSd'])}$ & "
                     f"${b(num[f'T{tag}Random'] + r'\pm' + num[f'T{tag}RandomSd'])}$ & "
                     f"${b(num[f'T{tag}Gap'] + r'\pm' + num[f'T{tag}GapSd'])}$pp \\\\")
@@ -73,9 +73,9 @@ def main():
         s = load(f"table2_memory_{env}.json")["summary"]
         tag = "Ego" if env == "egocentric" else "Full"
         put(f"M{tag}NoMem", s["no_memory_mean"], ".3f")
-        put(f"M{tag}NoMemSd", s["no_memory_std"], ".3f")
+        put(f"M{tag}NoMemSd", s["no_memory_std"], ".3f" if s["no_memory_std"] >= 0.0005 else ".4f")
         put(f"M{tag}Mem", s["with_memory_mean"], ".3f")
-        put(f"M{tag}MemSd", s["with_memory_std"], ".3f")
+        put(f"M{tag}MemSd", s["with_memory_std"], ".3f" if s["with_memory_std"] >= 0.0005 else ".4f")
         body.append(f"{label} & ${num[f'M{tag}NoMem']}\\pm{num[f'M{tag}NoMemSd']}$ & "
                     f"${num[f'M{tag}Mem']}\\pm{num[f'M{tag}MemSd']}$ \\\\")
     with open(os.path.join(G, "table2.tex"), "w") as f:
