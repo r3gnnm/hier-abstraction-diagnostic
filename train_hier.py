@@ -1,20 +1,4 @@
-"""Обучение иерархической JEPA + ДИАГНОСТИКИ схлопывания верхнего уровня.
-
-Три проверки, отвечающие на вопрос "верхний уровень реален или декоративен?":
-
-  1. level_use_gap — аналог action_gap для иерархии. Подменяем z2 на чужой
-     (перемешанный по батчу) и смотрим, насколько вырастет ошибка уровня 1.
-     Около нуля => нижний уровень игнорирует контекст, иерархия декоративна.
-
-  2. Дифференциальный probe — специализация уровней:
-        z1 должен лучше предсказывать ЛОКАЛЬНУЮ позицию внутри комнаты,
-        z2 должен лучше предсказывать НОМЕР КОМНАТЫ (медленная абстракция).
-     Если z2 не лучше z1 на комнате — абстракция не выделилась.
-
-  3. Сравнение с плоским бейзлайном (--flat) при равном числе параметров:
-     выигрыш должен расти С ГОРИЗОНТОМ, иначе дело в ёмкости, а не в иерархии.
-
-Запуск:
+"""
   python train_hier.py --episodes 200 --epochs 20
   python train_hier.py --episodes 200 --epochs 20 --flat     # бейзлайн
 """
@@ -64,7 +48,7 @@ def collect(n_episodes, ep_len, seed=0, env_name="full", n_landmarks=6):
 
 def train(obs, acts, epochs, k, device, flat=False, latent1=128, latent2=32,
           bs=16, lr=3e-4, seed=0, abstractor="recurrent"):
-    torch.manual_seed(seed)   # фиксируем инициализацию весов и порядок батчей —
+    torch.manual_seed(seed)   # фиксируем инициализацию весов и порядок батчей 
                               # иначе шум обучения маскирует эффект от числа ориентиров
     n_ep, T1 = obs.shape[0], obs.shape[1]
     T = T1 - 1
@@ -153,9 +137,6 @@ def encode_all(enc, abst, obs, device, bs=8):
 
 
 def mlp_probe_r2(X, Y, device, hidden=64, steps=600):
-    """Нелинейный probe равной ёмкости — убирает конфаунд:
-    линейный probe по z2 неявно нелинеен относительно z1 (z2 = MLP(z1)),
-    поэтому сравнивать линейные probe по разным уровням некорректно."""
     import torch.nn as nn
     n_tr = int(0.8 * len(X))
     X, Y = X.to(device), Y.to(device)
@@ -187,7 +168,6 @@ def ridge_r2(X, Y, device):
 
 
 def room_accuracy(X, rooms, device, n_cls=None):
-    """Линейный классификатор комнаты/зоны (ridge на one-hot) -> точность."""
     if n_cls is None:
         n_cls = GRID * GRID
     Y = torch.zeros(len(rooms), n_cls)
@@ -212,10 +192,10 @@ def main():
     p.add_argument("--flat", action="store_true", help="плоский бейзлайн")
     p.add_argument("--env", type=str, default="full",
                    choices=["full", "ego", "open", "open_dynamic", "open_landmark"],
-                   help="full/ego — комнаты, open — открытый мир (статичные "
-                        "препятствия, аналог леса), open_dynamic — препятствия "
+                   help="full/ego - комнаты, open - открытый мир (статичные "
+                        "препятствия, аналог леса), open_dynamic - препятствия "
                         "меняются каждый эпизод (аналог туннеля без ориентиров), "
-                        "open_landmark — динамические препятствия + редкие "
+                        "open_landmark - динамические препятствия + редкие "
                         "постоянные ориентиры")
     p.add_argument("--out", type=str, default="hier_results.json")
     p.add_argument("--n-landmarks", type=int, default=6,
@@ -223,7 +203,7 @@ def main():
     p.add_argument("--abstractor", type=str, default="recurrent",
                    choices=["recurrent", "instantaneous"])
     p.add_argument("--seed", type=int, default=0,
-                   help="seed для среды И обучения — варьируй для повторов "
+                   help="seed для среды И обучения - варьируй для повторов "
                         "одной и той же конфигурации, чтобы усреднить шум")
     args = p.parse_args()
 
@@ -243,7 +223,7 @@ def main():
 
     Z1, Z2 = encode_all(enc, abst, obs, device)
     # КОНТРОЛЬ: тот же абстрактор, но НЕОБУЧЕННЫЙ (случайные веса).
-    # Если случайная проекция даёт тот же прирост — выигрыш даёт нелинейность
+    # Если случайная проекция даёт тот же прирост, выигрыш даёт нелинейность
     # архитектуры, а не обучение абстракции.
     rnd_abst = make_abstractor(args.abstractor, 128, 32).to(device).eval()  # untrained, same type
     _, Z2rnd = encode_all(enc, rnd_abst, obs, device)
@@ -285,7 +265,7 @@ def main():
           f"   z2 R²={res['z2_local_r2']:.3f}")
     print(f"    номер комнаты:     z1 acc={res['z1_room_acc']:.3f}"
           f"  z2 acc={res['z2_room_acc']:.3f}")
-    print("\n  КОНТРОЛЬ — случайный (необученный) абстрактор:")
+    print("\n  КОНТРОЛЬ - случайный (необученный) абстрактор:")
     print(f"    номер комнаты:     z2_rand acc={res['z2rand_room_acc']:.3f}"
           f"  (сравни с z2 acc={res['z2_room_acc']:.3f})")
     print(f"    локальная позиция: z2_rand R²={res['z2rand_local_r2']:.3f}")
