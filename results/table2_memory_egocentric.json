@@ -1,0 +1,111 @@
+{
+  "config": {
+    "env": "egocentric",
+    "episodes": 150,
+    "ep_len": 32,
+    "epochs": 20,
+    "latent_dim": 128,
+    "seeds": [
+      0,
+      1,
+      2
+    ],
+    "out": "results/table2_memory_egocentric.json",
+    "maps": false
+  },
+  "runs": [
+    {
+      "seed": 0,
+      "mlp": {
+        "action_gap_norm": 0.0553,
+        "probe_r2_from_z": [
+          0.8187,
+          0.8399
+        ],
+        "probe_r2_from_z_and_h": [
+          0.8186,
+          0.8399
+        ],
+        "probe_r2_from_z_mean": 0.8293,
+        "probe_r2_from_z_and_h_mean": 0.8293
+      },
+      "gru": {
+        "action_gap_norm": 0.0038,
+        "probe_r2_from_z": [
+          0.8048,
+          0.8426
+        ],
+        "probe_r2_from_z_and_h": [
+          0.8818,
+          0.9293
+        ],
+        "probe_r2_from_z_mean": 0.8237,
+        "probe_r2_from_z_and_h_mean": 0.9055
+      }
+    },
+    {
+      "seed": 1,
+      "mlp": {
+        "action_gap_norm": 0.0457,
+        "probe_r2_from_z": [
+          0.7399,
+          0.8432
+        ],
+        "probe_r2_from_z_and_h": [
+          0.5618,
+          0.8242
+        ],
+        "probe_r2_from_z_mean": 0.7916,
+        "probe_r2_from_z_and_h_mean": 0.693
+      },
+      "gru": {
+        "action_gap_norm": 0.0067,
+        "probe_r2_from_z": [
+          0.7473,
+          0.8563
+        ],
+        "probe_r2_from_z_and_h": [
+          0.8494,
+          0.9312
+        ],
+        "probe_r2_from_z_mean": 0.8018,
+        "probe_r2_from_z_and_h_mean": 0.8903
+      }
+    },
+    {
+      "seed": 2,
+      "mlp": {
+        "action_gap_norm": 0.0551,
+        "probe_r2_from_z": [
+          0.7555,
+          0.8636
+        ],
+        "probe_r2_from_z_and_h": [
+          0.7554,
+          0.8635
+        ],
+        "probe_r2_from_z_mean": 0.8096,
+        "probe_r2_from_z_and_h_mean": 0.8095
+      },
+      "gru": {
+        "action_gap_norm": 0.0058,
+        "probe_r2_from_z": [
+          0.764,
+          0.8603
+        ],
+        "probe_r2_from_z_and_h": [
+          0.8729,
+          0.9274
+        ],
+        "probe_r2_from_z_mean": 0.8121,
+        "probe_r2_from_z_and_h_mean": 0.9001
+      }
+    }
+  ],
+  "summary": {
+    "no_memory_mean": 0.8102,
+    "no_memory_std": 0.0154,
+    "with_memory_mean": 0.8986,
+    "with_memory_std": 0.0063
+  }
+}

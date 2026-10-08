@@ -1,0 +1,168 @@
+{
+  "config": {
+    "seeds": [
+      0,
+      1,
+      2
+    ],
+    "episodes": 200,
+    "ep_len": 48,
+    "epochs": 40,
+    "k": 8,
+    "out": "results/table1_2x2.json"
+  },
+  "conditions": {
+    "full_instantaneous": {
+      "rows": [
+        {
+          "seed": 0,
+          "z1_acc": 0.9985,
+          "z2_trained": 0.9949,
+          "z2_random": 0.9923,
+          "gap_pp": 0.26,
+          "level_use_gap": 0.0205
+        },
+        {
+          "seed": 1,
+          "z1_acc": 0.9974,
+          "z2_trained": 0.9903,
+          "z2_random": 0.9913,
+          "gap_pp": -0.1,
+          "level_use_gap": 0.0177
+        },
+        {
+          "seed": 2,
+          "z1_acc": 1.0,
+          "z2_trained": 0.9964,
+          "z2_random": 0.9949,
+          "gap_pp": 0.15,
+          "level_use_gap": 0.0228
+        }
+      ],
+      "z1_acc_mean": 0.9986,
+      "z1_acc_std": 0.0011,
+      "z2_trained_mean": 0.9939,
+      "z2_trained_std": 0.0026,
+      "z2_random_mean": 0.9928,
+      "z2_random_std": 0.0015,
+      "gap_pp_mean": 0.1033,
+      "gap_pp_std": 0.1506,
+      "level_use_gap_mean": 0.0203,
+      "level_use_gap_std": 0.0021
+    },
+    "full_recurrent": {
+      "rows": [
+        {
+          "seed": 0,
+          "z1_acc": 0.9985,
+          "z2_trained": 0.9918,
+          "z2_random": 0.9832,
+          "gap_pp": 0.87,
+          "level_use_gap": 0.0207
+        },
+        {
+          "seed": 1,
+          "z1_acc": 0.9985,
+          "z2_trained": 0.9934,
+          "z2_random": 0.9832,
+          "gap_pp": 1.02,
+          "level_use_gap": 0.0206
+        },
+        {
+          "seed": 2,
+          "z1_acc": 1.0,
+          "z2_trained": 0.9959,
+          "z2_random": 0.9898,
+          "gap_pp": 0.61,
+          "level_use_gap": 0.015
+        }
+      ],
+      "z1_acc_mean": 0.999,
+      "z1_acc_std": 0.0007,
+      "z2_trained_mean": 0.9937,
+      "z2_trained_std": 0.0017,
+      "z2_random_mean": 0.9854,
+      "z2_random_std": 0.0031,
+      "gap_pp_mean": 0.8333,
+      "gap_pp_std": 0.1694,
+      "level_use_gap_mean": 0.0188,
+      "level_use_gap_std": 0.0027
+    },
+    "ego_instantaneous": {
+      "rows": [
+        {
+          "seed": 0,
+          "z1_acc": 0.3735,
+          "z2_trained": 0.3607,
+          "z2_random": 0.324,
+          "gap_pp": 3.67,
+          "level_use_gap": 0.0404
+        },
+        {
+          "seed": 1,
+          "z1_acc": 0.4255,
+          "z2_trained": 0.3806,
+          "z2_random": 0.3918,
+          "gap_pp": -1.12,
+          "level_use_gap": 0.032
+        },
+        {
+          "seed": 2,
+          "z1_acc": 0.5128,
+          "z2_trained": 0.4612,
+          "z2_random": 0.4714,
+          "gap_pp": -1.02,
+          "level_use_gap": 0.0361
+        }
+      ],
+      "z1_acc_mean": 0.4373,
+      "z1_acc_std": 0.0575,
+      "z2_trained_mean": 0.4008,
+      "z2_trained_std": 0.0435,
+      "z2_random_mean": 0.3957,
+      "z2_random_std": 0.0602,
+      "gap_pp_mean": 0.51,
+      "gap_pp_std": 2.2348,
+      "level_use_gap_mean": 0.0362,
+      "level_use_gap_std": 0.0034
+    },
+    "ego_recurrent": {
+      "rows": [
+        {
+          "seed": 0,
+          "z1_acc": 0.3944,
+          "z2_trained": 0.6214,
+          "z2_random": 0.3801,
+          "gap_pp": 24.13,
+          "level_use_gap": 0.0639
+        },
+        {
+          "seed": 1,
+          "z1_acc": 0.4423,
+          "z2_trained": 0.6031,
+          "z2_random": 0.4439,
+          "gap_pp": 15.92,
+          "level_use_gap": 0.0557
+        },
+        {
+          "seed": 2,
+          "z1_acc": 0.5163,
+          "z2_trained": 0.7388,
+          "z2_random": 0.5418,
+          "gap_pp": 19.69,
+          "level_use_gap": 0.0596
+        }
+      ],
+      "z1_acc_mean": 0.451,
+      "z1_acc_std": 0.0501,
+      "z2_trained_mean": 0.6544,
+      "z2_trained_std": 0.0601,
+      "z2_random_mean": 0.4553,
+      "z2_random_std": 0.0665,
+      "gap_pp_mean": 19.9133,
+      "gap_pp_std": 3.3554,
+      "level_use_gap_mean": 0.0597,
+      "level_use_gap_std": 0.0033
+    }
+  }
+}

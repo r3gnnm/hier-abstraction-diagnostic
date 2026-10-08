@@ -1,0 +1,11 @@
+{
+  "config": {
+    "episodes": 500,
+    "ep_len": 75,
+    "seed": 0,
+    "out": "results/env_stats.json"
+  },
+  "room_transitions_per_episode_mean": 1.01,
+  "room_transitions_per_episode_std": 1.382,
+  "share_episodes_without_transition": 0.484
+}
