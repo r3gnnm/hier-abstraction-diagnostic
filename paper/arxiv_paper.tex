@@ -12,7 +12,7 @@
 
 % Every empirical number below is generated from the committed result files by
 % make_tables.py (see README). Set the repository URL once here.
-\newcommand{\RepoURL}{https://github.com/USERNAME/REPO}
+\newcommand{\RepoURL}{https://github.com/r3gnnm/hier-abstraction-diagnostic}
 \newcommand{\resfile}[1]{\href{\RepoURL/blob/main/results/#1}{\nolinkurl{results/#1}}}
 \input{generated/numbers}
 \makeatletter\newcommand{\tablerows}[1]{\@@input #1 }\makeatother
@@ -28,7 +28,7 @@
 \maketitle
 
 \begin{abstract}
-Hierarchical predictive architectures such as H-JEPA \citep{lecun2022path} propose learning abstractions at multiple temporal and spatial scales, and have recently been instantiated end-to-end for visual planning \citep{zhang2026hjepa}. Evidence that such a hierarchy has learned an abstraction typically comes from probing: a slow variable remains decodable at higher levels while fast detail does not. Probe recoverability, however, does not distinguish information a level \emph{learned} from information it merely \emph{preserved} from the level below. We introduce a diagnostic protocol built around a \emph{random-abstractor control} --- comparing a trained top level against an identically-parameterized but untrained one --- and apply it across a $2\times2$ design crossing observability (full vs.\ egocentric) with abstractor type (instantaneous vs.\ recurrent) in controlled gridworld environments with exact ground truth at both scales. Three of four conditions yield abstractions that are statistically indistinguishable from random projections (or slightly worse), for two distinct reasons: under full observability the abstraction has nothing to add, since the slow variable is already linearly decodable from the fast level; under partial observability an instantaneous abstractor lacks any mechanism to integrate the history required to recover it. Only the combination of partial observability and a recurrent abstractor produces a measurably learned abstraction, replicated across \TEgoRecN{} seeds (top-level probe accuracy gap over random: $\TEgoRecGap\pm\TEgoRecGapSd$pp, vs.\ $\TFullRecGap\pm\TFullRecGapSd$pp under full observability). Current end-to-end hierarchical JEPAs, with pointwise level encoders in fixed-camera environments, sit in the cell where a level can reshape or discard information but cannot add it. We further report a negative result: attempts to establish a quantitative relationship between the density of persistent visual landmarks and abstraction quality in an open-world setting did not survive multi-seed replication, despite a promising single-run trend. Our results give an empirical account of \emph{why} architectures such as DreamerV3's RSSM \citep{hafner2023dreamerv3} combine a recurrent deterministic state with an instantaneous latent, and provide a reusable diagnostic that we argue should accompany any claim that a hierarchical model has learned a meaningful abstraction.
+Hierarchical predictive architectures such as H-JEPA \citep{lecun2022path} propose learning abstractions at multiple temporal and spatial scales, and have recently been instantiated end-to-end for visual planning \citep{zhang2026hjepa}. Evidence that such a hierarchy has learned an abstraction typically comes from probing: a slow variable remains decodable at higher levels while fast detail does not. Probe recoverability, however, does not distinguish information a level \emph{learned} from information it merely \emph{preserved} from the level below. We introduce a diagnostic protocol built around a \emph{random-abstractor control} --- comparing a trained top level against an identically-parameterized but untrained one --- and apply it across a $2\times2$ design crossing observability (full vs.\ egocentric) with abstractor type (instantaneous vs.\ recurrent) in controlled gridworld environments with exact ground truth at both scales. In three of four conditions the trained top level matches its random control to within about one percentage point on average, for two distinct reasons: under full observability the abstraction has nothing to add, since the slow variable is already linearly decodable from the fast level; under partial observability an instantaneous abstractor lacks any mechanism to integrate the history required to recover it. Only the combination of partial observability and a recurrent abstractor produces a measurably learned abstraction, replicated across \TEgoRecN{} seeds (top-level probe accuracy gap over random: $\TEgoRecGap\pm\TEgoRecGapSd$pp, vs.\ $\TFullRecGap\pm\TFullRecGapSd$pp under full observability). Current end-to-end hierarchical JEPAs, with pointwise level encoders in fixed-camera environments, sit in the cell where a level can reshape or discard information but cannot add it. We further report a negative result: attempts to establish a quantitative relationship between the density of persistent visual landmarks and abstraction quality in an open-world setting did not survive multi-seed replication, despite a promising single-run trend. Our results give an empirical account of \emph{why} architectures such as DreamerV3's RSSM \citep{hafner2023dreamerv3} combine a recurrent deterministic state with an instantaneous latent, and provide a reusable diagnostic that we argue should accompany any claim that a hierarchical model has learned a meaningful abstraction.
 \end{abstract}
 
 \section{Introduction}
@@ -42,7 +42,7 @@ A training recipe does not settle a second question, which is the subject of thi
 \paragraph{Contributions.}
 \begin{enumerate}
 \item A diagnostic protocol for hierarchical world models centered on a \emph{random-abstractor control}, plus two supporting diagnostics (level-use ablation and equal-capacity differential probing).
-\item A $2\times2$ empirical study crossing observability with abstractor type, showing that three of four conditions produce abstractions statistically indistinguishable from random projections --- for two structurally different reasons --- and locating current end-to-end hierarchical JEPAs within this design.
+\item A $2\times2$ empirical study crossing observability with abstractor type, showing that in three of four conditions a random projection matches the trained abstraction to within about one percentage point --- for two structurally different reasons --- and locating current end-to-end hierarchical JEPAs within this design.
 \item An honest negative result on landmark density in open-world settings, including the methodological failure mode (a convincing trend on single runs that did not survive seed replication) that produced it.
 \end{enumerate}
 
@@ -106,9 +106,9 @@ Only one condition shows a learned abstraction. The three failures have two dist
 
 \textbf{Nothing to add (full observability).} Room identity is already almost perfectly linearly decodable from $z_1$ (probe accuracy \TFullInstZone{} and \TFullRecZone{} in the two full-observability conditions), so any projection --- trained or random --- preserves it. The near-perfect scores in the top two rows measure \emph{recoverability}, not learning. This is the failure mode the random control was designed to catch, and without it these rows would read as strong successes.
 
-\textbf{No mechanism (egocentric + instantaneous).} With an egocentric crop, room identity is not recoverable from any single frame; it requires integrating a history of door transitions. An instantaneous $z_2 = \text{MLP}(z_1)$ is a deterministic function of the current frame alone and therefore cannot encode more than $z_1$ does. The trained abstractor scores \emph{marginally below} random here, consistent with there being no learnable signal to acquire.
+\textbf{No mechanism (egocentric + instantaneous).} With an egocentric crop, room identity is not recoverable from any single frame; it requires integrating a history of door transitions. An instantaneous $z_2 = \text{MLP}(z_1)$ is a deterministic function of the current frame alone and therefore cannot encode more than $z_1$ does. Trained and random abstractors are indistinguishable here ($\TEgoInstGap\pm\TEgoInstGapSd$pp, from $\TEgoInstGapMin$ to $+\TEgoInstGapMax$pp across seeds), and both score slightly below the fast level they are computed from ($z_1$: \TEgoInstZone), consistent with there being nothing for an instantaneous projection to add.
 
-\textbf{Both conditions met (egocentric + recurrent).} Making the abstractor recurrent supplies the missing mechanism, and the $\TEgoRecGap\pm\TEgoRecGapSd$pp gap over random indicates a genuinely learned abstraction. The seed-to-seed range (\TEgoRecGapMin{} to \TEgoRecGapMax{}pp) is wide in absolute terms, underscoring why we replicate rather than report one number. The level-use ablation moves in the same direction (\TEgoInstLevelUse{} $\to$ \TEgoRecLevelUse{}, a $\TLevelUseRatio\times$ increase over the instantaneous case), indicating the lower level begins to rely on the abstract context once that context carries information the frame does not.
+\textbf{Both conditions met (egocentric + recurrent).} Making the abstractor recurrent supplies the missing mechanism, and the $\TEgoRecGap\pm\TEgoRecGapSd$pp gap over random indicates a genuinely learned abstraction. The trained top level also exceeds the fast level it is computed from (\TEgoRecTrained{} vs.\ \TEgoRecZone{} for $z_1$): here the higher level \emph{adds} information rather than preserving it, the case our design is built to detect. The seed-to-seed range (\TEgoRecGapMin{} to \TEgoRecGapMax{}pp) is wide in absolute terms, underscoring why we replicate rather than report one number. The level-use ablation moves in the same direction (\TEgoInstLevelUse{} $\to$ \TEgoRecLevelUse{}, a $\TLevelUseRatio\times$ increase over the instantaneous case), indicating the lower level begins to rely on the abstract context once that context carries information the frame does not.
 
 \subsection{Memory ablation with an observability control}
 
@@ -131,7 +131,7 @@ Memory helps precisely where information is missing and nowhere else, ruling out
 
 \subsection{Negative result: landmark density in open worlds}
 
-We tested whether the \emph{quantity} of persistent visual anchors quantitatively predicts abstraction quality, using the open-world environment with $n$ persistent landmarks among per-episode-reshuffled obstacles. In an earlier exploratory version of this pipeline, single runs at $n=0,3,6$ suggested an apparently clean monotonic trend. Replicating with three seeds per point did not support it (Table~\ref{tab:landmark}); the exploratory single runs are not part of the released results and we report no numbers from them.
+We tested whether the \emph{quantity} of persistent visual anchors quantitatively predicts abstraction quality, using the open-world environment with $n$ persistent landmarks among per-episode-reshuffled obstacles. Taken alone, the first seed at $n=0,3,6$ shows an apparently clean monotonic trend ($\LZeroSeedZero\to\LThreeSeedZero\to\LSixSeedZero$pp gap), the same pattern that first led us to suspect a landmark-density law. Averaging three seeds per point and extending the range to $n=15$ does not support it (Table~\ref{tab:landmark}).
 
 \begin{table}[h]
 \centering
@@ -146,11 +146,11 @@ We tested whether the \emph{quantity} of persistent visual anchors quantitativel
 
 No monotonic relationship survives; between-point differences are comparable to within-point standard deviation. We report this because the single-run version was convincing enough that we had begun writing it up as a positive finding.
 
-What \emph{does} hold qualitatively across every variant tested: pure dead reckoning (zero landmarks, obstacles reshuffled every episode) never produces a large gap, while the building environment's doorways --- frequent, reliable, visually distinct anchors encountered on every room transition --- produce the largest gap observed ($\TEgoRecGap$pp, Table~\ref{tab:2x2}). We therefore conjecture, without claiming to have established, that anchor \emph{reliability and frequency of encounter} matter more than raw count.
+What \emph{does} hold qualitatively across every variant tested: pure dead reckoning (zero landmarks, obstacles reshuffled every episode) never approaches the gap seen in the building environment ($\LZeroMean\pm\LZeroStd$pp), while the building environment's doorways --- frequent, reliable, visually distinct anchors encountered on every room transition --- produce the largest gap observed ($\TEgoRecGap$pp, Table~\ref{tab:2x2}). We therefore conjecture, without claiming to have established, that anchor \emph{reliability and frequency of encounter} matter more than raw count.
 
 \section{Discussion}
 
-Our results suggest hierarchical abstraction becomes measurably real only when two conditions hold simultaneously: \textbf{a mechanism capable of integrating history}, and \textbf{information genuinely unavailable to the lower level without it}. Neither alone suffices, and each failure mode is invisible to standard metrics --- the full-observability cells post the highest absolute probe scores in the entire study while learning nothing.
+Our results suggest hierarchical abstraction becomes measurably real only when two conditions hold simultaneously: \textbf{a mechanism capable of integrating history}, and \textbf{information genuinely unavailable to the lower level without it}. Neither alone suffices, and each failure mode is invisible to standard metrics --- the full-observability cells post the highest absolute probe scores in the entire study while learning almost nothing measurable (gaps of $\TFullInstGap$ and $\TFullRecGap$pp).
 
 This offers an empirical account of an architectural choice usually stated without justification: RSSM-style world models (e.g.\ DreamerV3, \citealp{hafner2023dreamerv3}) pair a recurrent deterministic state with an instantaneous stochastic latent. Our $2\times2$ indicates that on fully-observable benchmarks the recurrent component is approximately inert, and its contribution appears only under partial observability --- which is consistent with, and may partly explain, why hierarchical or recurrent components sometimes appear to contribute little on toy fully-observable tasks.
 
@@ -162,22 +162,11 @@ All environments are small synthetic gridworlds with hand-specified slow variabl
 
 \section{Conclusion}
 
-We provide a diagnostic protocol for verifying that hierarchical world-model abstractions are learned rather than decorative, and apply it to show that three of four natural design conditions produce abstractions indistinguishable from random projections. We argue the random-abstractor control is cheap enough --- one extra untrained module and one extra probe --- that it should be standard in any work claiming a hierarchical model has learned a meaningful abstraction.
+We provide a diagnostic protocol for verifying that hierarchical world-model abstractions are learned rather than decorative, and apply it to show that in three of four natural design conditions a random projection matches the trained abstraction to within about one percentage point. We argue the random-abstractor control is cheap enough --- one extra untrained module and one extra probe --- that it should be standard in any work claiming a hierarchical model has learned a meaningful abstraction.
 
-Code, environments, all diagnostics, and the result files behind every number in this paper are available at \url{\https://github.com/r3gnnm/hier-abstraction-diagnostic}. A single command (\texttt{reproduce.sh} or \texttt{reproduce.bat}) regenerates all results and tables.
-
-\appendix
-\section{Reproduction}
-
-\begin{verbatim}
-python env_stats.py --episodes 500 --ep-len 75
-python run_2x2_sweep.py --seeds 0 1 2 --episodes 200 --ep-len 48 --epochs 40 --k 8
-python compare_memory.py --env egocentric --episodes 150 --ep-len 32 --epochs 20 --seeds 0 1 2
-python compare_memory.py --env base       --episodes 150 --ep-len 32 --epochs 20 --seeds 0 1 2
-python run_landmark_sweep.py --landmarks 0 3 6 10 15 --seeds 0 1 2 \
-    --episodes 200 --ep-len 48 --epochs 40 --k 8
-python make_tables.py      # results/*.json -> paper/generated/*.tex
-\end{verbatim}
+Code, environments, all diagnostics, and the result files behind every number in this paper are available at
+\begin{center}\url{\RepoURL}\end{center}
+Running \texttt{reproduce.sh} (Linux/macOS) or \texttt{reproduce.bat} (Windows) regenerates all results and tables with a single command.
 
 \bibliographystyle{plainnat}
 \begin{thebibliography}{9}
@@ -214,5 +203,24 @@ Zhang, W., Terver, B., Rabbat, M., LeCun, Y., and Balestriero, R.
 \newblock \emph{arXiv preprint arXiv:2610.06805}, 2026.
 
 \end{thebibliography}
+
+\appendix
+\section{Reproduction}
+
+{\footnotesize
+\begin{verbatim}
+python env_stats.py --episodes 500 --ep-len 75
+python run_2x2_sweep.py --seeds 0 1 2 --episodes 200 --ep-len 48 \
+    --epochs 40 --k 8
+python compare_memory.py --env egocentric --episodes 150 --ep-len 32 \
+    --epochs 20 --seeds 0 1 2
+python compare_memory.py --env base --episodes 150 --ep-len 32 \
+    --epochs 20 --seeds 0 1 2
+python run_landmark_sweep.py --landmarks 0 3 6 10 15 --seeds 0 1 2 \
+    --episodes 200 --ep-len 48 --epochs 40 --k 8
+python make_tables.py      # results/*.json -> paper/generated/*.tex
+\end{verbatim}
+}
+
 
 \end{document}
